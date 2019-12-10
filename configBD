@@ -1,0 +1,107 @@
+﻿create table Usuario (
+    uid SERIAL,
+    nome varchar,
+    cidade varchar,
+    endereco varchar,
+    PRIMARY KEY(uid)
+);
+
+create table Ator(
+    aid SERIAL,
+    nome varchar,
+    cidade varchar,
+    PRIMARY KEY(aid)
+);
+
+create table Filme (
+    fid SERIAL,
+    nome varchar,
+    genero varchar,
+    aid_ator1 integer,
+    aid_ator2 integer,
+    PRIMARY KEY(fid),
+    CONSTRAINT fk_ator1 FOREIGN KEY (aid_ator1) references Ator(aid),
+    CONSTRAINT fk_ator2 FOREIGN KEY (aid_ator2) references Ator(aid)
+);
+
+create table Filmes_Preferidos (
+    uid integer,
+    genero_filme varchar,
+    PRIMARY KEY(uid, genero_filme),
+    CONSTRAINT fk_uid FOREIGN KEY (uid) references Usuario(uid)
+);
+
+create table Filmes_Assistidos (
+    uid integer,
+    fid integer,
+    PRIMARY KEY (uid, fid),
+    CONSTRAINT fk_uid FOREIGN KEY (uid) references Usuario(uid),
+    CONSTRAINT fk_fid FOREIGN KEY (fid) references Filme(fid)
+);
+
+create table Atores_Preferidos (
+    uid integer,
+    aid integer,
+    PRIMARY KEY(uid, aid),
+    CONSTRAINT fk_uid FOREIGN KEY(uid) references Usuario(uid),
+    CONSTRAINT fk_aid FOREIGN KEY(aid) references Ator(aid)
+);
+
+/* Função e Trigger para remover dependências de Usuário */
+
+create or replace function removeUser()
+returns trigger AS $$
+
+Begin
+
+    delete from Atores_Preferidos where uid = old.uid;
+    delete from Filmes_Preferidos where uid = old.uid;
+    delete from Filmes_Assistidos where uid = old.uid;
+    return old;
+
+End;
+$$language plpgsql;
+
+create trigger trig_removeUser
+before delete on Usuario
+for each row
+execute procedure removeUser();
+
+
+/* Função e Trigger para remover dependências de Ator */
+
+create or replace function removeAtor()
+returns trigger AS $$
+
+Begin
+
+    delete from Atores_Preferidos where aid = old.aid;
+    delete from Filme where aid_ator1 = old.aid or aid_ator2 = old.aid;
+    return old;
+    
+End;
+$$language plpgsql;
+
+create trigger trig_removeAtor
+before delete on Ator
+for each row
+execute procedure removeAtor();
+
+
+/* Função e Trigger para remover dependências de Filme*/
+
+create or replace function removeFilme()
+returns trigger AS $$
+
+Begin
+
+    delete from Filmes_Assistidos where fid = old.fid;
+    return old;
+
+End;
+$$language plpgsql;
+
+create trigger trig_removeFilme
+before delete on Filme
+for each row
+execute procedure removeFilme();
