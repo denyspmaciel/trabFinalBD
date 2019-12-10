@@ -1,5 +1,5 @@
 # Me Recomenda um Filme?
-Trabalho Final da Disciplina de Fundamentos de Banco de Dados
+Trabalho Final da Disciplina de Fundamentos de Banco de Dados utilizando Java, PostgreSQL e JDBC.
 
 # Pré-requisitos
 Java <br>
