@@ -3,7 +3,7 @@ Trabalho Final da Disciplina de Fundamentos de Banco de Dados utilizando Java, P
 
 # Pré-requisitos
 Java <br>
-Postgresql <br>
+PostgreSQL <br>
 pgAdmin III (opcional, mas recomendado para operações no banco do postgresql) <br>
 Eclipse IDE (opcional, mas fortemente recomendada para criação e execução das classes em Java, assim como a inserção do postgresql-42.2.2.jar dentro do projeto) <br>
 
