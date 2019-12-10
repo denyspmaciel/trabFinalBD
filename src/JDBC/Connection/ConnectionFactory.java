@@ -10,7 +10,7 @@ public class ConnectionFactory {
 	private final int port = 5432;
 	private final String user = "postgres";
 	private final String password = "postgres";
-	private final String database = "PraticaJDBC";
+	private final String database = "BD_Filmes";
 	
 	public Connection getConnection() {
 		try {
